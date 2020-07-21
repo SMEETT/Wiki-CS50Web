@@ -1,0 +1,20 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Searching: {{ query }}
+{% endblock %}
+
+{% block body %}
+    
+    You searched for <span class="search-query">{{ query }}</span>
+    <br>
+
+    <ul>
+        {% for entry in results %}
+            <li><a href="wiki/{{ entry }}">{{ entry }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">Back to Home</a>
+
+{% endblock %}
