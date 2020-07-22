@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django import forms
+import random
 
 from markdown2 import Markdown
 
@@ -21,7 +22,7 @@ def index(request):
         "entries": util.list_entries()
     })
 
-def showEntry(request, entry):
+def show_entry(request, entry):
     
     markdowner = Markdown()
     
@@ -60,7 +61,7 @@ class newEntryForm(forms.Form):
     entryMarkdown = forms.CharField(widget=forms.Textarea(attrs={"placeholder": "Use Markdown here :)"}))
 
 
-def newEntry(request):
+def new_entry(request):
     if request.method == "POST":
         
         form = newEntryForm(request.POST)
@@ -83,7 +84,7 @@ def newEntry(request):
         })
 
 
-def editEntry(request, entry):
+def edit_entry(request, entry):
     if request.method == "POST":
        
         form = editEntryForm(request.POST)
@@ -107,3 +108,9 @@ def editEntry(request, entry):
             "entry": entry,
             "form": form
         })
+
+
+def random_entry(request):
+    entries = util.list_entries()
+    rnd = random.randint(0, len(entries) -1)
+    return HttpResponseRedirect(f"/wiki/{entries[rnd]}")

@@ -8,7 +8,7 @@
 {% block body %}
     
     <h3>Add new Entry!</h3>
-    <form action="{% url 'newEntry' %}" method="POST">
+    <form action="{% url 'new_entry' %}" method="POST">
         {% csrf_token %}
         <div>Entry Title: {{ form.entryTitle }}</div>
         <div>{{ form.entryMarkdown }}</div>

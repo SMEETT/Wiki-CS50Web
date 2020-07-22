@@ -8,7 +8,7 @@
 {% block body %}
     
     <h3>Edit <span class="font-highlight">{{ entry }}</span></h3>
-    <form action="{% url 'editEntry' entry %}" method="POST">
+    <form action="{% url 'edit_entry' entry %}" method="POST">
         {% csrf_token %}
         <div>{{ form.entryMarkdown }}</div>
         
