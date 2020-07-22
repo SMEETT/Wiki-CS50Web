@@ -44,3 +44,8 @@ h1 {
     box-sizing: border-box;
     margin-top: 10px;
 }
+
+.font-highlight {
+    color: red;
+    font-style: oblique;
+}

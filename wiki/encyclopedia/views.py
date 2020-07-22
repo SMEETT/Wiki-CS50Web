@@ -3,10 +3,16 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django import forms
 
-
 from markdown2 import Markdown
 
 from . import util
+
+class newEntryForm(forms.Form):
+    entryTitle = forms.CharField(label="New Entry Title")
+    entryMarkdown = forms.CharField(widget=forms.Textarea(attrs={"placeholder": "Use Markdown here :)"}))
+
+class editEntryForm(forms.Form):
+    entryMarkdown = forms.CharField(widget=forms.Textarea)
 
 
 
@@ -16,6 +22,7 @@ def index(request):
     })
 
 def showEntry(request, entry):
+    
     markdowner = Markdown()
     
     try:
@@ -60,7 +67,7 @@ def newEntry(request):
         
         if form.is_valid():
             newEntryTitle = form.cleaned_data["entryTitle"]
-            newEntryMarkdown = form.cleaned_data["entryMarkdown"]
+            newEntryMarkdown = form.cleaned_data["entryMarkdown"].replace("\n", "")
 
             if newEntryTitle not in util.list_entries():
                 util.save_entry(newEntryTitle, newEntryMarkdown)
@@ -78,27 +85,23 @@ def newEntry(request):
 
 def editEntry(request, entry):
     if request.method == "POST":
-
-        print(request.POST)
-        
-        form = newEntryForm(request.POST)
-        # print(form)
+       
+        form = editEntryForm(request.POST)
         
         if form.is_valid():
-            entryTitle = form.cleaned_data["entryTitle"]
             entryMarkdown = form.cleaned_data["entryMarkdown"].replace("\n", "")
 
-            # print(entryTitle)
-            # print(entryMarkdown)
-
-            util.save_entry(entryTitle, entryMarkdown)
+            util.save_entry(entry, entryMarkdown)
             return HttpResponseRedirect(f"/wiki/{entry}")
-
+        else:
+            return render(request, "encyclopedia/error.html", {
+                "error": "WRONG!"
+            })
 
     elif request.method == "GET":
 
         content = util.get_entry(entry)
-        form = newEntryForm(initial={'entryTitle': entry, 'entryMarkdown': content})
+        form = editEntryForm(initial={'entryMarkdown': content})
                 
         return render(request, "encyclopedia/editEntry.html", {
             "entry": entry,
